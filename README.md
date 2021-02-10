@@ -12,7 +12,7 @@ SQL server 2019 express edition and Microsoft SQL server management studio
 
 ## Motivation: 
 
-I started journaling in 2020 during the lockdown in the pandemic. Three topics of my interest point include skin, exercise. I am interested to know how these topics interest people and do analysis with the topics and related queries. 
+I started journaling in 2020 during the lockdown in the pandemic. Three topics of my interest point include skin, exercise and prayer. I am interested to know how these topics interest people and do analysis with the topics and related queries. 
 
 ## Topics: 
 Compare personal health topics in the US (2/9/20-2/6/21)
