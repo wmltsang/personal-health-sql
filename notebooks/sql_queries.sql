@@ -53,5 +53,8 @@ HAVING skin_value >= AVG(skin_value
 GROUP BY region) 
 )
 
+/*topics_subregion columns is nvarchar , you need to take out % and change datatype to do aggregation*/
+SELECT CAST(REPLACE(skin_value,'%','') AS INT) as skin_percent
+FROM topics_subregion
 
 
