@@ -45,16 +45,21 @@ ON s.region = e.region
 FULL OUTER JOIN prayer_subregion p
 ON e.region = p.region
 
-SELECT region, skin_value,exercise_value,prayer_value
-FROM 
-(SELECT *
-FROM topics_subregion 
-HAVING skin_value >= AVG(skin_value
-GROUP BY region) 
-)
+/* delete record region = 'Region' becasue the values are strings with dates*/
+DELETE FROM topics_subregion
+WHERE region = 'Region';
 
 /*topics_subregion columns is nvarchar , you need to take out % and change datatype to do aggregation*/
-SELECT CAST(REPLACE(skin_value,'%','') AS INT) as skin_percent
-FROM topics_subregion
+/*ALTER TABLE topics_subregion
+ SELECT CAST(REPLACE(skin_value,'%','') AS INT) as skin_percent,
+CAST(REPLACE(exercise_value,'%','') AS INT) as exercise_percent,
+CAST(REPLACE(prayer_value,'%','') AS INT) as prayer_percent
+FROM topics_subregion;*/
 
+--UPDATE [SomeTable] SET [SomeColumn] = REPLACE([SomeColumn], 'somestring', '')
+
+
+--inner query
+SELECT AVG(skin_value)
+FROM topics_subregion
 
