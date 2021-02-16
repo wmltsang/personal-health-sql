@@ -57,9 +57,29 @@ CAST(REPLACE(prayer_value,'%','') AS INT) as prayer_percent
 FROM topics_subregion;*/
 
 --UPDATE [SomeTable] SET [SomeColumn] = REPLACE([SomeColumn], 'somestring', '')
+UPDATE topics_subregion 
+SET skin_value = REPlACE(skin_value, '%',''), --note: the column values are percentage in unit
+exercise_value = REPlACE(exercise_value, '%',''),
+prayer_value = REPlACE(exercise_value, '%','')
 
-
+--change datatype so can perform aggregation functions
+--ALTER TABLE TableName 
+--ALTER COLUMN ColumnName NVARCHAR(200) [NULL | NOT NULL]
+ALTER TABLE topics_subregion
+ALTER COLUMN skin_value INT 
 --inner query
-SELECT AVG(skin_value)
+/*SELECT AVG(skin_value)
+FROM topics_subregion*/
+
+SELECT TOP 5 region,
+skin_value
 FROM topics_subregion
+--exercise_value AS exercise_percent,
+--prayer_value AS prayer_percent
+WHERE skin_value >
+(SELECT AVG(skin_value)
+FROM topics_subregion)
+ORDER BY skin_value DESC
+
+--do same query for other two columns on topics_subregion to find out top 5 regions with values more than national average
 
