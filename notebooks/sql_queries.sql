@@ -72,7 +72,7 @@ ALTER COLUMN skin_value INT
 FROM topics_subregion*/
 
 SELECT TOP 5 region,
-skin_value
+skin_value AS skin_percent --only need alias here not others
 FROM topics_subregion
 --exercise_value AS exercise_percent,
 --prayer_value AS prayer_percent
@@ -82,4 +82,36 @@ FROM topics_subregion)
 ORDER BY skin_value DESC
 
 --do same query for other two columns on topics_subregion to find out top 5 regions with values more than national average
+ALTER TABLE topics_subregion
+ALTER COLUMN exercise_value INT 
 
+SELECT TOP 5 region,
+exercise_value AS exercise_percent --only need alias here not others
+FROM topics_subregion
+--prayer_value AS prayer_percent
+WHERE exercise_value >
+(SELECT AVG(exercise_value)
+FROM topics_subregion)
+ORDER BY exercise_value DESC
+
+ALTER TABLE topics_subregion
+ALTER COLUMN prayer_value INT
+
+SELECT TOP 5 region,
+prayer_value AS prayer_percent --only need alias here not others
+FROM topics_subregion
+WHERE prayer_value >
+(SELECT AVG(prayer_value)
+FROM topics_subregion)
+ORDER BY prayer_value DESC
+
+--table skin_subregion
+SELECT TOP 5 region, value
+FROM skin_subregion
+ORDER BY value DESC
+
+/*trouble shoot why topics_subregion values differ from source data
+SELECT region, skin_value,
+prayer_value,
+exercise_value
+FROM topics_subregion*/
