@@ -45,22 +45,19 @@ ON s.region = e.region
 FULL OUTER JOIN prayer_subregion p
 ON e.region = p.region
 
+
 /* delete record region = 'Region' becasue the values are strings with dates*/
 DELETE FROM topics_subregion
-WHERE region = 'Region';
+WHERE region = 'Region'
 
 /*topics_subregion columns is nvarchar , you need to take out % and change datatype to do aggregation*/
-/*ALTER TABLE topics_subregion
- SELECT CAST(REPLACE(skin_value,'%','') AS INT) as skin_percent,
-CAST(REPLACE(exercise_value,'%','') AS INT) as exercise_percent,
-CAST(REPLACE(prayer_value,'%','') AS INT) as prayer_percent
-FROM topics_subregion;*/
+
 
 --UPDATE [SomeTable] SET [SomeColumn] = REPLACE([SomeColumn], 'somestring', '')
 UPDATE topics_subregion 
 SET skin_value = REPlACE(skin_value, '%',''), --note: the column values are percentage in unit
 exercise_value = REPlACE(exercise_value, '%',''),
-prayer_value = REPlACE(exercise_value, '%','')
+prayer_value = REPlACE(prayer_value, '%','') --troubleshoot success, I replace prayer value with exercise value by typing error
 
 --change datatype so can perform aggregation functions
 --ALTER TABLE TableName 
@@ -100,18 +97,39 @@ ALTER COLUMN prayer_value INT
 SELECT TOP 5 region,
 prayer_value AS prayer_percent --only need alias here not others
 FROM topics_subregion
+--prayer_value AS prayer_percent
 WHERE prayer_value >
 (SELECT AVG(prayer_value)
 FROM topics_subregion)
 ORDER BY prayer_value DESC
+
+
+SELECT TOP 5 region,
+skin_value AS skin_percent,
+exercise_value AS exercise_percent,
+prayer_value AS prayer_percent--only need alias here not others
+FROM topics_subregion
+WHERE prayer_value >
+(SELECT AVG(prayer_value)
+FROM topics_subregion)
+AND exercise_value >
+(SELECT AVG(exercise_value)
+FROM topics_subregion)
+AND skin_value >
+(SELECT AVG(skin_value)
+FROM topics_subregion)
+ORDER BY skin_value DESC; --there are no region that can go above avg of the three values combined
+
+--top 5 region sort by skin value desc
+SELECT TOP 5 region,
+skin_value AS skin_percent,
+exercise_value AS exercise_percent,
+prayer_value AS prayer_percent
+FROM topics_subregion
+ORDER BY skin_value DESC
 
 --table skin_subregion
 SELECT TOP 5 region, value
 FROM skin_subregion
 ORDER BY value DESC
 
-/*trouble shoot why topics_subregion values differ from source data
-SELECT region, skin_value,
-prayer_value,
-exercise_value
-FROM topics_subregion*/
