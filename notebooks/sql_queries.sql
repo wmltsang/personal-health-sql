@@ -128,8 +128,58 @@ prayer_value AS prayer_percent
 FROM topics_subregion
 ORDER BY skin_value DESC
 
+/*delete the 'Region' record under region which is irrelevant to the analyis*/
+DELETE FROM skin_subregion
+WHERE region = 'Region'
+
+ALTER TABLE skin_subregion --found out the value column is a string 
+ALTER COLUMN value INT
+
 --table skin_subregion
-SELECT TOP 5 region, value
+SELECT TOP 5 region, 
+value as skin_value
 FROM skin_subregion
 ORDER BY value DESC
 
+
+--do an inner join on region with other tables exercise_subregion and prayer_subregion to see what their values are
+SELECT TOP 5 s.region,
+s.value as skin_value,
+e.value as exercise_value,
+p.value as prayer_value
+FROM skin_subregion s
+INNER JOIN exercise_subregion e
+ON s.region = e.region
+INNER JOIN prayer_subregion p
+ON e.region = p.region
+ORDER BY s.value DESC --conclusion: when people care their skin based on key word search interest, they tend to also pay higher attention to 
+                      -- exercise and prayer
+
+SELECT TOP 5 s.region,
+s.value as skin_value,
+e.value as exercise_value,
+p.value as prayer_value
+FROM skin_subregion s
+INNER JOIN exercise_subregion e
+ON s.region = e.region
+INNER JOIN prayer_subregion p
+ON e.region = p.region
+ORDER BY s.value ASC -- conlusion: when people not care skin based on key word search interest, they tend to also pay lower attention to exercise
+                     -- as well as prayer
+
+--Examine what are interested keywords people search related to respective topics
+SELECT *
+FROM skin_related_queries
+WHERE skin_queries LIKE '%covid%'
+
+SELECT *
+FROM skin_related_queries
+WHERE skin_queries LIKE '%ord%'
+
+UPDATE skin_related_queries 
+SET value = REPlACE(REPLACE(value, '+',''),'%','') --note: the column values are percentage in unit
+
+SELECT *
+FROM skin_related_queries
+
+--bonus:after all analysis, try to see if you can group region into larger division such as west,east coast for comparison.
